@@ -148,14 +148,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # For django_social_auth
-SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook',)
-SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
+# SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook',)
+# SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
 
 # For django_social_auth
-FACEBOOK_APP_ID = '359702040796778'
-FACEBOOK_SECRET_KEY = 'f5d49fae3d32286be4406d0e04f944f2'
-FACEBOOK_API_SECRET = 'f5d49fae3d32286be4406d0e04f944f2'
-FACEBOOK_SCOPE = ['user_likes', 'user_photos', 'user_photo_video_tags']
+# FACEBOOK_APP_ID = '359702040796778'
+# FACEBOOK_API_SECRET = 'f5d49fae3d32286be4406d0e04f944f2'
+# FACEBOOK_SCOPE = ['user_likes', 'user_photos', 'user_photo_video_tags']
 
 # For django_social_auth
 LOGIN_URL = '/login/'
@@ -165,7 +164,7 @@ LOGIN_ERROR_URL = '/login-error/'
 # For Max's facebook logoin
 FACEBOOK_APP_ID = '359702040796778'
 FACEBOOK_API_SECRET = 'f5d49fae3d32286be4406d0e04f944f2'
-FACEBOOK_REDIRECT_URI = 'http://localhost:8080/logged_in_facebook'
+FACEBOOK_REDIRECT_URI = 'http://localhost:8080/fb_login_test/logging_in/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

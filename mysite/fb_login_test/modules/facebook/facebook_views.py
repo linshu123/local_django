@@ -22,8 +22,9 @@ def show_login_view(request):
     #     facebook_session = models.FacebookSession.objects.get(user=request.user)
     # except FacebookSession.DoesNotExist:
     #     return
-    facebook_session = models.FacebookSession.objects.get(user=request.user)
-    access_token = facebook_session.access_token
+    # facebook_session = models.FacebookSession.objects.get(user=request.user)
+    access_token = 'AQByh4hKxAeG5ColmOg8M5aU5UbPQEZZnRDf3QZ2bZnf8-9Fyq95IAvn94wf9RrAmCmztE-wgsvrL-boOWP0DrW0PfUBu3NLXvTdzms8P90xP_xNOqEDBqOibJySvmQ4cctR9w0Q3k6hUxp7xEat9jTH7Dc6MpKOmfROCeBUhecYbEb_Obeg-nECM_sitKeoOS_MqceTrBEA92w9HsJOr350g1GL7Mx_HqtsygWpaQORxoDmEMNgoa2YkMymfcQVfppptuQzUWd2-BmSQpT71a0JG6MldnPjyeMz3CZFncxhNw0c2mBwI_mbs_1woNmLXLc'
+    # access_token = facebook_session.access_token
     friends_list = get_friends(access_token)
     friends_names = [friend_name['first_name'] + ' ' + friend_name['last_name'] for friend_name in friends_list]
     context = {

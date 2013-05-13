@@ -1,0 +1,17 @@
+{% load url from future %}
+<body>
+    <h1>Welcome to facebook_app index page!</h1>
+    <script type="text/javascript">
+        document.write("Hello \
+            World!");
+
+    </script>
+
+    <h2>All your friends:</h2>
+    <ul>
+        {% for friend_name in friends_list %}
+            <li>{{ friend_name }}</li>
+
+        {% endfor %}
+    </ul>
+</body>

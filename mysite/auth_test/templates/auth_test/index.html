@@ -1,0 +1,25 @@
+{% load url from future %}
+<html>
+<body>
+    <h1>Welcome to auth test index page!</h1>
+    <h2>Please login:</h2>
+    <form action = "{% url 'auth_test:login_user' %}" method = "post"> 
+        {% csrf_token %}
+        username: <input type = "text" name = "username"><br>
+        password: <input type = "text" name = "password"><br>
+        <input type = "submit" value = "log in" >
+    </form>
+
+    <br>
+    <h2>Register a new account:</h2>
+    <form action = "{% url 'auth_test:create_account' %}" method = "post"> 
+        {% csrf_token %}
+        username: <input type = "text" name = "username"><br>
+        password: <input type = "text" name = "password"><br>
+        retype password: <input type = "text" name = "password_copy"><br>
+        <input type = "submit" value = "Create new account" >
+    </form>
+    <h2>{{ message }}</h2>
+
+</body>
+</html>

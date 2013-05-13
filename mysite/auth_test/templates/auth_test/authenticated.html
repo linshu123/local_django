@@ -1,0 +1,8 @@
+{% load url from future %}
+<html>
+<body>
+    <h1>You are authenticated!</h1>
+    <h2>You are logged in as {{ username }}</h2>
+    <a href="{% url 'auth_test:logout_user' %}">Log out</a>
+</body>
+</html>

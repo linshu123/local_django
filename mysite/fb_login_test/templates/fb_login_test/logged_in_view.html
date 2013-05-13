@@ -1,16 +1,13 @@
 {% load url from future %}
 <body>
-    <h1>Welcome to facebook_app index page!</h1>
-    <script type="text/javascript">
-        document.write("Hello \
-            World!");
+    <h1>Welcome to facebook_app index page!</h1><br>
 
-    </script>
+    <a href="{% url 'fb_login_test:logout_user' %}">Log out</a>
 
     <h2>All your friends:</h2>
     <ul>
-        {% for friend_name in friends_list %}
-            <li>{{ friend_name }}</li>
+        {% for friend in friends_list %}
+            <li>{{ friend.full_name }}</li>
 
         {% endfor %}
     </ul>

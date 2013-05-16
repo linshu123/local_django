@@ -9,6 +9,14 @@
         return movie_2.likes - movie_1.likes;
     }
 
+    function httpGet(theUrl){
+        var xmlHttp = null;
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false );
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
     function process_data(){
         //Sort movies by popularity, we need to create an array.
         var movie_array = new Array();
@@ -41,12 +49,15 @@
                 console.log(movie_info.id);
                 if(movie_info.link) {
                     // newDiv.innerHTML = "<a href='"+movie_info.link+"'>" + movie_info.link+"</a><br/>";
-                    newDiv.innerHTML = " ";
-                    if (movie_info.cover)
-                        newDiv.innerHTML += "<img src='"+movie_info.cover.source+"'>" + "</img><br/>";
+                    newDiv.innerHTML = "";
+                    if (movie_info.cover){
+                        newDiv.innerHTML += "<a href = '" + movie_info.link + "' target='_blank'>" 
+                        + "<img src='"+ movie_info.cover.source + "'>" + "</img><br/>"
+                        + "</a>";
+                    }
                     newDiv.innerHTML += '<iframe src='
                         + '"http://www.facebook.com/plugins/like.php?'
-                        + 'href='+movie_info.link+'&amp;layout=standard'
+                        + 'href=' + movie_info.link +'&amp;layout=standard'
                         + '&amp;show_faces=true&amp;'
                         + 'width=450&amp;action=like&amp;'
                         + 'colorscheme=light&amp;height=80"' 
@@ -108,9 +119,9 @@
 <div id="movies"></div> 
 <script src="http://connect.facebook.net/en_US/all.js"></script> 
 
-<script> 
+<script type="text/javascript"> 
 FB.init({
-    appId  : '359702040796778',
+    appId  : '{{ FACEBOOK_APP_ID }}',
     status : true, // check login status
     cookie : true, // enable cookies 
     xfbml  : true, // parse XFBML

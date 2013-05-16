@@ -2,11 +2,15 @@
 <html>
 <body>
 
+<h2>You are logged in as {{ username }}</h2>
 <h1>Please log in to Facebook:</h1> <br>
 
-<a href="https://graph.facebook.com/oauth/authorize?client_id=359702040796778&redirect_uri=http://localhost:8080/fb_login_test/logging_in/&scope=user_photos,friends_photos&display=popup">
+
+<a href="/fb_login_test/logging_in/">
     <img src="http://developers.facebook.com/images/devsite/login-button.png"/>
 </a>
+
+<a href="{% url 'auth_test:logout_user' %}">Log out</a>
 
 </body>
 

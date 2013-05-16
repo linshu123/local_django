@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^polls/', include('polls.urls', namespace="polls")),
     url(r'^fb_login_test/', include('fb_login_test.urls', namespace="fb_login_test")),
     url(r'^auth_test/', include('auth_test.urls', namespace="auth_test")),
+    url(r'^pull_movies_test/', include('pull_movies_test.urls', namespace="pull_movies_test")),
     # url(r'^facebook_app/', include('facebook_app.urls', namespace="facebook_app")),
     url(r'^admin/', include(admin.site.urls)),
 )

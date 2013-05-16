@@ -1,0 +1,136 @@
+<html>
+<body>
+
+<title>Pull movies test page</title>
+<script type="text/javascript">
+    var movie_dict = new Array();
+
+    function compare_movie_popularity(movie_1, movie_2){
+        return movie_2.likes - movie_1.likes;
+    }
+
+    function process_data(){
+        //Sort movies by popularity, we need to create an array.
+        var movie_array = new Array();
+        for (movie_name in movie_dict) {
+            var new_entry = {
+                name : movie_dict[movie_name].name, 
+                likes : movie_dict[movie_name].likes,
+                id : movie_dict[movie_name].id
+            };
+            movie_array = movie_array.concat(new_entry)
+        }
+        movie_array.sort(compare_movie_popularity)
+
+        //Display first 100 most popular movies.
+        var disp_movies = document.createElement("div");
+        disp_movies.innerHTML = '<h1>Top 100 movies of your friends and likes: </h1>'
+        document.getElementById("movies").appendChild(disp_movies);
+
+        num_movies_to_display = movie_array.length > 100 ? 100 : movie_array.length;
+        for (var i = 0; i < num_movies_to_display; i++) {
+
+            var newDiv = document.createElement("DIV");
+            newDiv.innerHTML = "<li>" + movie_array[i].name + ": " + movie_array[i].likes + "</li>";
+            newDiv.id = movie_array[i].id;
+            document.getElementById("movies").appendChild(newDiv);
+
+            // Display the picture and a like button.
+            FB.api('/'+movie_array[i].id, function(movie_info) {
+                var newDiv = document.createElement("DIV");
+                console.log(movie_info.id);
+                if(movie_info.link) {
+                    // newDiv.innerHTML = "<a href='"+movie_info.link+"'>" + movie_info.link+"</a><br/>";
+                    newDiv.innerHTML = " ";
+                    if (movie_info.cover)
+                        newDiv.innerHTML += "<img src='"+movie_info.cover.source+"'>" + "</img><br/>";
+                    newDiv.innerHTML += '<iframe src='
+                        + '"http://www.facebook.com/plugins/like.php?'
+                        + 'href='+movie_info.link+'&amp;layout=standard'
+                        + '&amp;show_faces=true&amp;'
+                        + 'width=450&amp;action=like&amp;'
+                        + 'colorscheme=light&amp;height=80"' 
+                        + 'scrolling="no" frameborder="0" style="'
+                        + 'border:none; overflow:hidden;' 
+                        + 'width:450px; height:80px;"'
+                        + 'allowTransparency="true"></iframe><br/>';
+                }
+                document.getElementById(movie_info.id).appendChild(newDiv);
+            })
+        };
+    }
+
+    function get_friend_likes(){
+        document.getElementById('test').innerHTML = "Get data from facebook...";
+        FB.api('/me/friends', function(response){
+            num_friends = response.data.length;
+            // num_friends = 3;
+            num_friends_left = num_friends;
+            for (var i = 0; i < num_friends; i++) {
+                friend_id = response.data[i].id;
+                FB.api('/' + friend_id + '/movies', function(friend_movie_list){
+
+                    // Iterate through all movies this friend likes and add to the movie list
+                    for (var j = 0; j < friend_movie_list.data.length; j++) {
+                        movie_name = friend_movie_list.data[j].id;
+                        if (movie_name in movie_dict){
+                            movie_dict[movie_name].likes++;
+                        }
+                        else{
+                            movie_dict[movie_name] = [];
+                            movie_dict[movie_name].likes = 1;
+                            movie_dict[movie_name].name = friend_movie_list.data[j].name;
+                            movie_dict[movie_name].id = friend_movie_list.data[j].id;
+                        }
+                    }
+
+                    // Output the number of friends left to get data
+                    num_friends_left--;
+                    document.getElementById('test').innerHTML = num_friends_left + " friends to go ... ";
+                    if (!num_friends_left){
+                        process_data();
+                        document.getElementById('test').innerHTML = "Finished loading.";
+                    }
+
+                });
+            };
+        });
+
+    }
+
+</script>
+
+<fb:login-button show-faces="true" width="200" max-rows="1", perms="user_likes, friends_likes"></fb:login-button>
+
+<div id="fb-root"></div> 
+<div id="login"></div> 
+<div id="test"></div> 
+<div id="movies"></div> 
+<script src="http://connect.facebook.net/en_US/all.js"></script> 
+
+<script> 
+FB.init({
+    appId  : '359702040796778',
+    status : true, // check login status
+    cookie : true, // enable cookies 
+    xfbml  : true, // parse XFBML
+    oauth  : true
+  });
+     
+FB.Event.subscribe('auth.authResponseChange', function(response) {
+    // Here we specify what we do with the response anytime this event occurs. 
+    if (response.status === 'connected') {
+      get_friend_likes();
+    } 
+    else if (response.status === 'not_authorized') {
+      FB.login();
+    } 
+    else {
+      FB.login();
+    }
+});
+</script> 
+
+
+</body>
+</html>

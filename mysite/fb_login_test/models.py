@@ -14,8 +14,8 @@ class FacebookSessionError(Exception):
     return u'%s: "%s"' % (self.type, self.message)
 
 class FacebookSession(models.Model):
-  access_token = models.CharField(max_length=103, unique = True)
-  user = models.ForeignKey(User, null=True)
+  access_token = models.CharField(max_length=103)
+  user = models.ForeignKey(User, unique = True)
 
 # Normal session
 # class FacebookSession(models.Model):

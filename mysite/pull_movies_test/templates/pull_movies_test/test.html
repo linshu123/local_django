@@ -1,0 +1,42 @@
+<html>
+<body>
+
+<a href="/pull_movies_test/display_movies">Display movies</a>
+
+<script type="text/javascript">
+    var a = "abcd";
+    var b = "1234";
+    var long_string = a + b;
+    var newstr = document.createElement("str");
+    newstr.innerHTML = "<h1>This is a title</h1>";
+    document.body.appendChild(newstr);
+    
+    var dic  = new Array();
+    abc_key = 'abc';
+    dic[abc_key] = 0;
+    dic['123'] = 1243;
+    if (abc_key in dic)
+        if (!dic[abc_key])
+            newstr.innerHTML = "<h1>" + dic[abc_key] + " is zero</h1>";
+        else
+            newstr.innerHTML = "<h1>" + dic[abc_key] + " is not zero</h1>";
+    else
+        newstr.innerHTML = "<h1>" + "does not exist" + "</h1>";   
+    
+    //Iterate through dictionary
+    var temp = document.createElement("div");
+    temp.innerHTML = '<h2>All elements: </h2>'
+    document.body.appendChild(temp);
+    for (key in dic) {
+        var newDiv = document.createElement("DIV");
+        newDiv.innerHTML = "<h1>" + dic[key] + "</h1>";
+        document.body.appendChild(newDiv);
+    };
+
+
+</script>
+
+
+</body>
+
+</html>

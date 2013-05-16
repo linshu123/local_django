@@ -3,11 +3,10 @@ import cgi
 import urllib
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import models as auth_models
-from fb_login_test.modules.facebook import facebook_views
 from django.core.context_processors import csrf
 from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 from mysite import settings
 import fb_login_test
@@ -21,25 +20,12 @@ login_view_url = 'fb_login_test/login_view.html'
 def show_login_view(request):
     if request.user.is_authenticated():
         return logging_in(request)
-
-    context = {
-        'settings.FACEBOOK_REDIRECT_URI': settings.FACEBOOK_REDIRECT_URI,
-        'settings.FACEBOOK_APP_ID': settings.FACEBOOK_APP_ID,
-    }
-    return render(request, login_view_url, context)
+    return render(request, 'auth_test/index.html', {'message': ''})
 
 
 def logging_in(request):
     show_friends_view_url = 'fb_login_test/logged_in_view.html'
-    if request.user.is_authenticated():
-        try:
-            facebook_session = fb_login_test.models.FacebookSession.objects.get(user=request.user)
-        except ObjectDoesNotExist:
-            logout_user(request)
-
-        access_token = facebook_session.access_token
-
-    elif 'code' in request.GET:
+    if 'code' in request.GET:
         args = {
             'client_id': settings.FACEBOOK_APP_ID,
             'client_secret': settings.FACEBOOK_API_SECRET,
@@ -50,12 +36,24 @@ def logging_in(request):
         url = 'https://graph.facebook.com/oauth/access_token?' + urllib.urlencode(args)
         response = cgi.parse_qs(urllib.urlopen(url).read())
         access_token = response['access_token'][0]
-        user = auth_models.User.objects.create_user(username = access_token)
-        user.save()
-        facebook_session, created = fb_login_test.models.FacebookSession.objects.get_or_create(access_token = access_token, user = user)
+        facebook_session, created = fb_login_test.models.FacebookSession.objects.get_or_create(user = request.user, access_token = access_token)
         if created:
             facebook_session.save()
 
+    elif request.user.is_authenticated():
+        try:
+            facebook_session = fb_login_test.models.FacebookSession.objects.get(user=request.user)
+            
+        except ObjectDoesNotExist:
+            fb_login_url = 'https://graph.facebook.com/oauth/authorize?client_id=' + settings.FACEBOOK_APP_ID + '&redirect_uri=' + settings.FACEBOOK_REDIRECT_URI + '&scope=user_photos,friends_photos&display=popup'
+            return redirect(fb_login_url)
+
+        access_token = facebook_session.access_token
+
+    else:
+        return render_to_response('auth_test/not_authenticated.html')
+
+    
     friends_list = get_friends(access_token)
 
     friends_names = []
@@ -71,7 +69,7 @@ def logging_in(request):
 
 def logout_user(request):
     logout(request)
-    return render_to_response(login_view_url)
+    return show_login_view(request)
 
 def query_fql_get_data(query, access_token):
     url = 'https://graph.facebook.com/fql?q=' + query + '&access_token=%s' % \

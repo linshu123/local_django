@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'fb_login_test',
     'social_auth',
     'auth_test',
+    'pull_movies_test',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

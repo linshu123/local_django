@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, models, login, logout
 from django.db import IntegrityError
-
+from fb_login_test import views as fb_login_test_views
 
 def index(request):
     if request.user.is_authenticated():
@@ -10,6 +10,8 @@ def index(request):
         return render(request, 'auth_test/index.html', {'message': ''})
 
 def login_user(request):
+    if request.user.is_authenticated():
+        return authenticated(request)
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(username = username, password = password)
@@ -22,6 +24,7 @@ def login_user(request):
     else:
         return invalid_login(request)
 
+
 def create_account(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -33,6 +36,8 @@ def create_account(request):
     try:
         user = models.User.objects.create_user(username = username, password = password)
         user.save()
+        user = authenticate(username = username, password = password)
+        login(request, user)
     except IntegrityError:
         return render(request, 'auth_test/index.html', {'message': 'Username already taken.'})
     
@@ -49,7 +54,7 @@ def invalid_login(request):
     return render(render, 'auth_test/invalid_login.html')
 
 def authenticated(request):
-    return render(request, 'auth_test/authenticated.html', {'username': request.user.username})
+    return fb_login_test_views.logging_in(request)
 
 def not_authenticated(request):
     return render(request, 'auth_test/not_authenticated.html')
